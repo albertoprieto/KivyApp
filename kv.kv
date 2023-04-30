@@ -1,0 +1,1059 @@
+#:import hex kivy.utils.get_color_from_hex
+#:import utils kivy.utils
+
+ScreenManager:
+    SplashScreen:
+    FirstScreen:
+    LoginScreen:
+    VaultScreen:
+    RegisterScreen:
+    PedidosScreen:
+    GpsScreen:
+    NewScreen:
+    Favscreen:
+    Cartscreen:
+
+
+<PedidoItem>:
+
+    MDCardSwipeLayerBox:
+        size_hint_y:None
+        height:dp(50)
+        elevation:15
+        MDBoxLayout:
+            MDIconButton:
+                icon: "information"
+                #on_release: root.remove_item(root)
+            MDIconButton:
+                #anchor_x:'right' 
+                icon: "cash-check"
+                #on_release:app.checkout_screen(app.image,app.cmnt,root)
+            MDLabel:
+                text:app.cmnt
+            Image:
+                source:app.image
+<CustomWidget>:
+    MDCardSwipeLayerBox:
+        size_hint_y:None
+        height:dp(50)
+        elevation:15
+
+        MDBoxLayout:
+            MDIconButton:
+                icon: "trash-can"
+                on_release: root.remove_item(root)
+            MDIconButton:
+                #anchor_x:'right' 
+                icon: "cash-check"
+                on_release:app.checkout_screen(app.image,app.cmnt,root)
+            MDLabel:
+                text:app.cmnt
+            Image:
+                source:app.image
+
+
+<Check@MDCheckbox>:
+    group: 'group'
+    #size_hint: None, None
+    size: dp(48), dp(48)
+
+
+
+<CheckoutView@MDBoxLayout>:
+    size_hint_y: None
+    height:dp(850)
+
+    ScrollView:
+        MDGridLayout:
+            id:check_grid
+            cols:1
+            padding:dp(20)
+            spacing:dp(20)
+
+            MDLabel:
+                text:app.cmnt
+                width: root.width *.8 
+            Image:
+                source:app.image
+                width: root.width *.8 
+            MDLabel:
+                text:'Generaremos una orden con la Informaciónque nos proporciones'
+                width: root.width *.8 
+            
+            MDLabel:
+                text:'Método de pago:'
+                width: root.width *.8 
+
+            MDGridLayout:
+                cols:2
+                spacing:dp(10)
+                MDCard:
+                    elevation:1
+                    MDLabel:
+                        text:'SPEI:'
+                    Check:
+                        active:False
+
+                        on_active:app.on_checkbox_active('spei',root)
+                MDCard:
+                    elevation:1
+                    MDLabel:
+                        text:'Depósito:'
+
+                    Check:
+                        active:False
+                        on_active:app.on_checkbox_active('deposito',root)
+            
+            MDRaisedButton:
+                width: root.width *.8 
+                text:'Hacer pedido'
+                on_release: app.proceed(root)
+
+
+<SpeiView@MDBoxLayout>:
+
+    ScrollView:
+        MDGridLayout:
+            id:check_grid
+            cols:1
+
+            #height: self.minimum_height
+            #size_hint_y: None
+
+            MDLabel:
+
+                text:'Recibimos tu pedido con éxito.'
+                width: root.width *.8
+                
+            MDRaisedButton:
+
+                text:'Descargar orden:'
+                width: root.width *.8 
+                on_release:app.descarga_orden()
+
+            MDLabel:
+
+                text: 'El estatus de tu pedido cambiará dentro de las próximas 24 horas después de registado el pago.\nConsulta el status de tu pedido' 
+                width:root.width +.8
+
+            MDRaisedButton:
+
+                text:'Consultar pedidos:'
+                width: root.width *.8 
+                on_release:app.goto_pedidos()
+
+<SplashScreen>:
+    canvas.before:
+        Color:
+            rgb: utils.get_color_from_hex("#81b29a")
+
+    MDScreen:
+        name: "splashscreen"
+        id: splashscreen
+
+        MDBoxLayout:
+            MDFloatLayout:
+                Image:
+                    source:'splash.jpg'
+                    allow_stretch: True
+                    anim_delay: .2
+                    # anim_loop: 1
+                    anim_reset: True
+
+                MDLabel:
+                    text: 'Bienvenido'
+                    halign: 'center'
+                    pos_hint:{'center_x':.4,'center_y':.4}
+
+<FirstScreen>:
+    name: 'firstscreen'
+    
+    MDTopAppBar:
+        pos_hint: {"top" : 1}
+        #md_bg_color: hex("ef6161")
+        title:'Inicio'
+
+    MDLabel:
+        #name:
+        #id:
+        size_hint_y: None
+        text_size: self.width, None
+        height: self.texture_size[1]
+        padding_x:15 
+        pos_hint: {"center_x": 0.5,"center_y": 0.8}
+        halign: 'center'
+        text:"Te esperamos pronto"
+        width: root.width *.8
+        text_size: self.size
+
+    MDRoundFlatButton:
+        text: "Regresar a la tienda"
+        pos_hint: {"center_x": 0.5,"center_y": 0.6}
+        on_press: root.manager.current = 'newscreen'
+        width: root.width *.8
+        text_size:'40sp'
+
+<LoginScreen>:
+    id: login
+    name: 'login'
+
+    MDTopAppBar:
+        pos_hint: {"top" : 1}
+        #md_bg_color: hex("ef6161")
+        title:'Login'
+        left_action_items:[['backspace-reverse-outline', lambda x: root.back()]]
+
+    MDTextField:
+        icon_left: "email"
+        id: master_user
+        hint_text: "Usuario"
+        size_hint_x: None
+        width: 200
+        pos_hint: {"center_x": 0.5, "center_y": 0.7}
+        width: root.width *.8
+        size_hint: None, None 
+        text_size:'30sp'
+
+    MDTextField:
+        icon_left: 'key-variant'
+        icon_right: 'eye-off'
+        id: master_password
+        hint_text: "Password"
+        size_hint_x: None
+        width: 200
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
+        password: True
+        width: root.width *.8
+        size_hint: None, None 
+        text_size:'30sp'
+
+    MDRoundFlatButton:
+        text: "Ingresar"
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        on_release: root.login()
+        width: root.width *.8
+        size_hint: None, None 
+        text_size:'40sp'
+
+    MDRoundFlatButton:
+        text: "Crear cuenta"
+        pos_hint: {"center_x": 0.5, "center_y": 0.4}
+        on_press: root.manager.current = 'register'
+        width: root.width *.8
+        size_hint: None, None 
+        text_size:'40sp'
+
+<VaultScreen>:
+    name: 'vault'
+    ScreenManager:
+        Screen:                
+            MDScreen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        id: toolbar
+                        pos_hint: {"top" : 1}
+                        #md_bg_color: hex("ef6161")
+                        title:"Bienvenido"
+                        left_action_items:[["menu",lambda x:nav_drawer.set_state("open")]]
+                        right_action_items:[["cart-outline",lambda x:app.goto_cart()]]
+
+                    ScrollView:
+                        MDGridLayout:
+                            height: self.minimum_height
+                            size_hint_y: None
+                            cols:1
+                            padding:dp(20)
+                            spacing:dp(20)
+
+                            MDCard:
+                                #height:dp(120)
+                                size_hint_y:None
+                                #md_bg_color:hex('2c2e2e')
+                                MDBoxLayout:
+
+                                    MDLabel:
+                                        text:'Regístrate y para obtener descuentos especiales'
+                                    Image:
+                                        source:'50of.png'
+
+                            MDRoundFlatButton:
+                                text: "Registrarme"
+                                on_press: root.manager.current = 'login'
+                                width: root.width *.8 
+                                text_size:'40sp'
+
+                            MDCard:
+                                height:dp(50)
+                                size_hint_y:None
+                                #md_bg_color:hex('2c2e2e')
+                                MDBoxLayout:
+                                    Image:
+                                        source:'finger.png'
+                                    MDLabel:
+                                        text:'Recomendado'
+
+                            ElementCard:
+                                md_bg_color:hex('ffffff')
+                                image:'blue.png'
+                                price:'600 $'
+                                desc:"Calzado deportivo azul"
+
+                Widget:
+            MDNavigationDrawer:
+                id: nav_drawer
+                    #BoxLayout:
+                    #pos_hint: {"center_y": 1}
+                    #pos_hint: {"top" : 1}
+                    #orientation: 'vertical'
+                    #padding: 3
+                    #spacing: 10
+
+
+
+                MDList:
+                    id: md_list
+                    pos_hint: {"top": 1}
+                    MDLabel:
+                        text: "Menú"
+                        size_hint_y: None
+                        #height: self.texture_size[1]
+
+                    OneLineIconListItem:
+                        text: "Mi cuenta"
+                        on_release:
+                            root.manager.current = 'vault'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "account-plus-outline"
+
+                    OneLineIconListItem:
+                        text: "Acerca de"
+                        on_release:
+                            root.manager.current = 'pedidosscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "bookmark-plus-outline" 
+
+                    OneLineIconListItem:
+                        text: "Tienda"
+                        on_release:
+                            root.manager.current = 'newscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "store"
+
+                    OneLineIconListItem:
+                        text: "Favoritos"
+                        on_release:
+                            root.manager.current = 'favscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "heart"
+
+                    OneLineIconListItem:
+                        text: "Carrito"
+                        on_release:
+                            root.manager.current = 'cartscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "cart-arrow-right"
+
+                    OneLineIconListItem:
+                        text: "Salir"
+                        on_release:
+                            root.manager.current = 'firstscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "logout-variant"
+
+
+<RegisterScreen>:
+    name: 'register'
+
+    MDTopAppBar:
+        pos_hint: {"top" : 1}
+        #md_bg_color: hex("ef6161")
+        title:'Registro'
+        left_action_items:[['backspace-reverse-outline', lambda x: root.back()]]
+
+    MDLabel:
+        text: 'Ingresa tus datos'
+        halign: 'center'
+        pos_hint:{'center_x':.5,'center_y':.8}
+        width: root.width *.8
+    MDTextField:
+        text:''
+        halign:'center'
+        pos_hint:{'center_x':.5,'center_y':.7}
+        icon_left: 'key-variant'
+        id: master_new_user
+        hint_text: "Usuario"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        width: root.width *.8
+    MDTextField:
+        text:''
+        halign:'center'
+        pos_hint:{'center_x':.5,'center_y':.6}
+        icon_left: 'key-variant'
+        icon_right: 'eye-off'
+        id: master_new_password
+        hint_text: "Contraseña"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        password:True
+        width: root.width *.8
+    MDTextField:
+        text:''
+        halign:'center'
+        pos_hint:{'center_x':.5,'center_y':.5}
+        icon_left: 'android'
+        id: master_new_extra1
+        hint_text: "dato extra 1"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        width: root.width *.8
+    MDTextField:
+        text:''
+        halign:'center'
+        pos_hint:{'center_x':.5,'center_y':.4}
+        icon_left: 'android'
+        id: master_new_extra2
+        hint_text: "dato extra 2"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        width: root.width *.8
+    MDTextField:
+        text:''
+        halign:'center'
+        pos_hint:{'center_x':.5,'center_y':.3}
+        icon_left: 'android'
+        id: master_new_extra3
+        hint_text: "dato extra 3"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        width: root.width *.8
+    MDTextField:
+        text:''
+        halign:'center'
+        pos_hint:{'center_x':.5,'center_y':.2}
+        icon_left: 'android'
+        id: master_new_extra4
+        hint_text: "dato extra 4"
+        size_hint_x: None
+        width: 200
+        font_size: 18
+        width: root.width *.8
+    MDRoundFlatButton:
+        text: "Registrar"
+        font_size: 12
+        pos_hint: {"center_x": 0.5, "center_y": 0.1}
+        on_press: root.register()
+        width: root.width *.8
+
+<PedidosScreen>:
+    name: 'pedidosscreen'
+    ScreenManager:
+        Screen:                
+            MDScreen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        id: toolbar
+                        pos_hint: {"top" : 1}
+                        #md_bg_color: hex("ef6161")
+                        title:"Pedidos"
+                        left_action_items:[["menu",lambda x:nav_drawer.set_state("open")]]
+                        right_action_items:[["cart-outline",lambda x:app.goto_cart()]]
+
+
+
+                    ScrollView:
+                        MDGridLayout:
+                            pos_hint: {"center_y": 8}
+                            id:grid_pedidos
+                            height: self.minimum_height
+                            size_hint_y: None
+                            cols:1
+                            padding:dp(10)
+                            spacing:dp(60)
+                            MDCard:
+                                height:dp(0)
+                                size_hint_y:None
+                                #md_bg_color:hex('000000')
+
+
+                Widget:
+            MDNavigationDrawer:
+                id: nav_drawer
+                    #BoxLayout:
+                    #pos_hint: {"center_y": 1}
+                    #pos_hint: {"top" : 1}
+                    #orientation: 'vertical'
+                    #padding: 3
+                    #spacing: 10
+
+                MDList:
+                    id: md_list
+                    pos_hint: {"top": 1}
+                    MDLabel:
+                        text: "Menú"
+                        size_hint_y: None
+                        #height: self.texture_size[1]
+
+                    OneLineIconListItem:
+                        text: "Mi cuenta"
+                        on_release:
+                            root.manager.current = 'vault'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "account-plus-outline"
+
+                    OneLineIconListItem:
+                        text: "Acerca de"
+                        on_release:
+                            root.manager.current = 'pedidosscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "bookmark-plus-outline" 
+
+                    OneLineIconListItem:
+                        text: "Tienda"
+                        on_release:
+                            root.manager.current = 'newscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "store"
+
+                    OneLineIconListItem:
+                        text: "Favoritos"
+                        on_release:
+                            root.manager.current = 'favscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "heart"
+
+                    OneLineIconListItem:
+                        text: "Carrito"
+                        on_release:
+                            root.manager.current = 'cartscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "cart-arrow-right"
+
+                    OneLineIconListItem:
+                        text: "Salir"
+                        on_release:
+                            root.manager.current = 'firstscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "logout-variant"
+
+<GpsScreen>:
+    name: 'gpsscreen'
+
+    ScreenManager:
+        Screen:
+            MDBoxLayout:
+                orientation:'vertical'
+                MDTopAppBar:
+                    pos_hint: {"top" : 1}
+                    #md_bg_color: hex("ef6161")
+                    title:"Bienvenido"
+                    left_action_items:[["menu",lambda x:nav_drawer.set_state("open")]]
+                    right_action_items:[["cart-outline",lambda x:app.goto_cart()]]
+
+                MDScreen:
+                    ScreenManager:
+                        MDScreen:
+
+                Widget:
+            MDNavigationDrawer:
+                id: nav_drawer
+                    #BoxLayout:
+                    #pos_hint: {"center_y": 1}
+                    #pos_hint: {"top" : 1}
+                    #orientation: 'vertical'
+                    #padding: 3
+                    #spacing: 10
+
+                MDList:
+                    id: md_list
+                    pos_hint: {"top": 1}
+                    MDLabel:
+                        text: "Menú"
+                        size_hint_y: None
+                        #height: self.texture_size[1]
+
+                    OneLineIconListItem:
+                        text: "Mi cuenta"
+                        on_release:
+                            root.manager.current = 'vault'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "account-plus-outline"
+
+                    OneLineIconListItem:
+                        text: "Acerca de"
+                        on_release:
+                            root.manager.current = 'pedidosscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "bookmark-plus-outline" 
+
+                    OneLineIconListItem:
+                        text: "Tienda"
+                        on_release:
+                            root.manager.current = 'newscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "store"
+
+                    OneLineIconListItem:
+                        text: "Favoritos"
+                        on_release:
+                            root.manager.current = 'favscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "heart"
+
+                    OneLineIconListItem:
+                        text: "Carrito"
+                        on_release:
+                            root.manager.current = 'cartscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "cart-arrow-right"
+
+                    OneLineIconListItem:
+                        text: "Salir"
+                        on_release:
+                            root.manager.current = 'firstscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "logout-variant"
+
+<NewScreen>:
+    name: 'newscreen'
+    ScreenManager:
+        Screen:                
+            MDScreen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        id: toolbar
+                        pos_hint: {"top" : 1}
+                        #md_bg_color: hex("ef6161")
+                        title:"Tienda"
+                        left_action_items:[["menu",lambda x:nav_drawer.set_state("open")]]
+                        right_action_items:[["cart-outline",lambda x:app.goto_cart()]]
+
+
+                    ScrollView:
+                        height:dp(750)
+                        MDGridLayout:
+                            
+                            height: self.minimum_height
+                            size_hint_y: None
+                            cols:2
+                            padding:dp(20)
+                            spacing:dp(20)
+                            
+                            ElementCard:
+                                md_bg_color:hex('ffffff')
+                                image:'blue.png'
+                                price:'600 $'
+                                desc:"Calzado deportivo azul"
+                            ElementCard:
+                                md_bg_color:hex('ffffff')
+                                image:'1.png'
+                                price:'600 $'
+                                desc:"Calzado deportivo amarillo"
+                            ElementCard:
+                                md_bg_color:hex('ffffff')
+                                image:'red.png'
+                                price:'600 $'
+                                desc:"Calzado deportivo rojo"
+                            ElementCard:
+                                md_bg_color:hex('ffffff')
+                                image:'2.png'
+                                price:'800 $'
+                                desc:"Calzado deportivo tipo bota azul"
+                            ElementCard:
+                                md_bg_color:hex('ffffff')
+                                image:'yellow.png'
+                                price:'500 $'
+                                desc:"Calzado deportivo"
+                            ElementCard:
+                                md_bg_color:hex('ffffff')
+                                image:'3.png'
+                                price:'800 $'
+                                desc:"Calzado urbano tipo bota"
+                Widget:
+            MDNavigationDrawer:
+                id: nav_drawer
+                    #BoxLayout:
+                    #pos_hint: {"center_y": 1}
+                    #pos_hint: {"top" : 1}
+                    #orientation: 'vertical'
+                    #padding: 3
+                    #spacing: 10
+
+                MDList:
+                    id: md_list
+                    pos_hint: {"top": 1}
+                    MDLabel:
+                        text: "Menú"
+                        size_hint_y: None
+                        #height: self.texture_size[1]
+
+                    OneLineIconListItem:
+                        text: "Mi cuenta"
+                        
+                        on_release:
+                            root.manager.current = 'vault'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "account-plus-outline"
+
+                    OneLineIconListItem:
+                        text: "Acerca de"
+                        on_release:
+                            root.manager.current = 'pedidosscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "bookmark-plus-outline" 
+
+                    OneLineIconListItem:
+                        text: "Tienda"
+                        on_release:
+                            root.manager.current = 'newscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "store"
+
+                    OneLineIconListItem:
+                        text: "Favoritos"
+                        on_release:
+                            root.manager.current = 'favscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "heart"
+
+                    OneLineIconListItem:
+                        text: "Carrito"
+                        on_release:
+                            root.manager.current = 'cartscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "cart-arrow-right"
+
+                    OneLineIconListItem:
+                        text: "Salir"
+                        on_release:
+                            root.manager.current = 'firstscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "logout-variant"
+
+
+<ContentCustomSheet@MDBoxLayout>:
+    orientation: "vertical"
+    size_hint_y: None
+    height:dp(750)
+    image:''
+    desc:""
+    price:""
+    padding:dp(12)
+    spacing:dp(6)
+
+    RelativeLayout:
+        ElementCard:
+            #md_bg_color:hex('f5f5f5')
+            md_bg_color:hex('ffffff')
+            pos_hint:{"x":.05,"y":.5}
+            image:root.image
+            desc:root.desc
+            price:root.price
+   
+    MDLabel:
+        text:"Información y detalle completa del producto."
+        adaptive_height:True
+   
+    MDBoxLayout:
+        adaptive_width:True
+        MDIconButton:
+            icon:'plus'
+            pos_hint:{"center_x":.5,"center_y":.5}
+            on_release:app.plus()
+
+        MDLabel:
+            name:num_item
+            id:num_item
+            text:app.num_item
+            halign:'center'
+            valign:'center'
+
+        MDIconButton:
+            icon:"minus"
+            pos_hint:{"center_x":.5,"center_y":.5}
+            on_release:app.minus()
+   
+    MDBoxLayout:
+        spacing:dp(8)
+        MDRoundFlatIconButton:
+            icon:"cart"
+            text:"Agregar"
+            size_hint_x:1
+            on_release:app.addtocart(root.image,app.num_item)
+            #on_release:app.show_custom_bottom_sheet(root.image,root.price,root.desc)
+        MDRoundFlatIconButton:
+            icon:"cards-heart"
+            text:"Favorito"
+            size_hint_x:1
+            on_release:app.addtofav(root.image,app.num_item)
+    MDRaisedButton:
+        size_hint_x:1
+        text:"Hacer pedido"
+        on_release:app.comprar()
+
+
+<ElementCard@MDCard>:
+    image:''
+    desc:''
+    price:""
+    orientation:'vertical'
+    on_release:app.show_custom_bottom_sheet(root.image,root.price,root.desc)
+    size_hint_x:.5
+    elevation:2
+    size_hint_y:None
+    #md_bg_color:hex('f5f5f5')
+    height:dp(220)
+    padding:dp(25)
+    spacing:dp(15)
+    radius:[25]
+    
+    MDBoxLayout:
+
+        #imagenproducto
+        height:dp(120)
+        size_hint_y:None
+        Image:
+            source:root.image
+
+    MDBoxLayout:
+        size_hint_y:None
+        height:dp(25)
+        MDIcon:
+            icon:'star'
+            theme_text_color:'Custom'
+            text_color:1,1,0,1
+            halign:"center"
+            size_hint_x:.25
+            # width:dp(30)
+        MDLabel:
+            text:root.desc
+
+    MDLabel:
+        text:root.price
+        font_style:'H5'
+
+
+
+<Favscreen>:
+    name: 'favscreen'
+    ScreenManager:
+        Screen:                
+            MDScreen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        id: toolbar
+                        pos_hint: {"top" : 1}
+                        #md_bg_color: hex("ef6161")
+                        title:"Favoritos"
+                        left_action_items:[["menu",lambda x:nav_drawer.set_state("open")]]
+                        right_action_items:[["cart-outline",lambda x:app.goto_cart()]]
+
+                    ScrollView:
+                        MDGridLayout:
+                            pos_hint: {"center_y": 8}
+                            id:grid_id
+                            height: self.minimum_height
+                            size_hint_y: None
+                            cols:1
+                            padding:dp(10)
+                            spacing:dp(60)
+                            MDCard:
+                                height:dp(0)
+                                size_hint_y:None
+                                #md_bg_color:hex('000000')
+
+                Widget:
+            MDNavigationDrawer:
+                id: nav_drawer
+                    #BoxLayout:
+                    #pos_hint: {"center_y": 1}
+                    #pos_hint: {"top" : 1}
+                    #orientation: 'vertical'
+                    #padding: 3
+                    #spacing: 10
+
+                MDList:
+                    id: md_list
+                    pos_hint: {"top": 1}
+                    MDLabel:
+                        text: "Menú"
+                        size_hint_y: None
+                        #height: self.texture_size[1]
+
+                    OneLineIconListItem:
+                        text: "Mi cuenta"
+                        on_release:
+                            root.manager.current = 'vault'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "account-plus-outline"
+
+                    OneLineIconListItem:
+                        text: "Acerca de"
+                        on_release:
+                            root.manager.current = 'pedidosscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "bookmark-plus-outline" 
+
+                    OneLineIconListItem:
+                        text: "Tienda"
+                        on_release:
+                            root.manager.current = 'newscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "store"
+
+                    OneLineIconListItem:
+                        text: "Favoritos"
+                        on_release:
+                            root.manager.current = 'favscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "heart"
+
+                    OneLineIconListItem:
+                        text: "Carrito"
+                        on_release:
+                            root.manager.current = 'cartscreen'
+
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "cart-arrow-right"
+
+                    OneLineIconListItem:
+                        text: "Salir"
+                        on_release:
+                            root.manager.current = 'firstscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "logout-variant"
+
+<Cartscreen>:
+    name: 'cartscreen'
+    ScreenManager:
+        Screen:                
+            MDScreen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDTopAppBar:
+                        id: toolbar
+                        pos_hint: {"top" : 1}
+                        #md_bg_color: hex("ef6161")
+                        title:"Carrito"
+                        left_action_items:[["menu",lambda x:nav_drawer.set_state("open")]]
+                        right_action_items:[["store",lambda x:root.goto_store()]]
+                    
+
+                    ScrollView:
+                        MDGridLayout:
+                            pos_hint: {"center_y": 8}
+                            id:grid_id
+                            height: self.minimum_height
+                            size_hint_y: None
+                            cols:1
+                            padding:dp(10)
+                            spacing:dp(60)
+                            MDCard:
+                                height:dp(0)
+                                size_hint_y:None
+                                #md_bg_color:hex('000000')
+
+                Widget:
+            MDNavigationDrawer:
+                id: nav_drawer
+                    #BoxLayout:
+                    #pos_hint: {"center_y": 1}
+                    #pos_hint: {"top" : 1}
+                    #orientation: 'vertical'
+                    #padding: 3
+                    #spacing: 10
+
+                MDList:
+                    id: md_list
+                    pos_hint: {"top": 1}
+                    MDLabel:
+                        text: "Menú"
+                        size_hint_y: None
+                        #height: self.texture_size[1]
+
+                    OneLineIconListItem:
+                        text: "Mi cuenta"
+                        on_release:
+                            root.manager.current = 'vault'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "account-plus-outline"
+
+                    OneLineIconListItem:
+                        text: "Acerca de"
+                        on_release:
+                            root.manager.current = 'pedidosscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "bookmark-plus-outline" 
+
+                    OneLineIconListItem:
+                        text: "Tienda"
+                        on_release:
+                            root.manager.current = 'newscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "store"
+
+                    OneLineIconListItem:
+                        text: "Favoritos"
+                        on_release:
+                            root.manager.current = 'favscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "heart"
+
+                    OneLineIconListItem:
+                        text: "Carrito"
+                        on_release:
+                            root.manager.current = 'cartscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "cart-arrow-right"
+
+                    OneLineIconListItem:
+                        text: "Salir"
+                        on_release:
+                            root.manager.current = 'firstscreen'
+                            root.ids.nav_drawer.set_state(new_state='toggle', animation=True)
+                        IconLeftWidget:
+                            icon: "logout-variant"
